@@ -18,7 +18,8 @@ Route::middleware([MainMiddleware::class])->group(function () {
    Route::get('/profile', 'App\Http\Controllers\Profile\IndexController')->name('profile');
    Route::post('/profile', 'App\Http\Controllers\Contact\CreateController')->name('add_contact');
    Route::patch('/profile', 'App\Http\Controllers\Contact\UpdateController')->name('update_contact');
-   Route::delete('/profile', 'App\Http\Controllers\Contact\DeleteController')->name('delete_contact');
+   Route::delete('/profile', 'App\Http\Controllers\Contact\DeleteController')->name('delete.contact');
+
 
 
 

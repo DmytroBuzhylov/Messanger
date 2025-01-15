@@ -68,21 +68,7 @@ class Service
 
     }
 
-    public function delete()
-    {
-        $userId = auth()->user()->id;
-        $userEmail = auth()->user()->email;
 
-
-        $userContact = User_Contact::where('email', $userEmail)
-            ->where('status', 'pending')
-            ->first();
-
-        if ($userContact) {
-            $userContact->status = 'rejected';
-            $userContact->save();
-        }
-    }
 
 
 }

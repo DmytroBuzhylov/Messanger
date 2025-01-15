@@ -33,16 +33,19 @@
                                 <p class="card-text fs-4">
                                     @php
                                         $contacts = $outgoingContacts->merge($incomingContacts);
-                                $i = 0;
-                                foreach ($contacts as $contact) {
-                                     if ($contact->status == 'accepted') {
-                                        $i++;
-                                    }
-                                }
-                                echo $i;
+                                        $i = 0;
+                                        foreach ($contacts as $contact) {
+                                            if ($contact->status == 'accepted') {
+                                                $i++;
+                                            }
+                                        }
+                                        echo $i;
                                     @endphp
                                 </p>
 
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#friendsModal">
+                                    Список друзей
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -53,9 +56,8 @@
                                 <p class="card-text fs-4">
                                     @php
                                         $i = 0;
-
                                         foreach ($contacts as $contact) {
-                                             if ($contact->status == 'pending' && $contact->user_id == auth()->user()->id) {
+                                            if ($contact->status == 'pending' && $contact->user_id == auth()->user()->id) {
                                                 $i++;
                                             }
                                         }
@@ -63,12 +65,86 @@
                                     @endphp
                                 </p>
 
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#requestsModal">
+                                    Ваши запросы
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+            <div class="modal fade" id="friendsModal" tabindex="-1" aria-labelledby="friendsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="friendsModalLabel">Список друзей</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group">
+                                @foreach($contacts as $contact)
+                                    @if($contact->status == 'accepted')
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            @php
+                                                if ($contact->user->name != auth()->user()->name) {
+                                                    echo  "<span>{$contact->user->name}</span>";
+                                                } elseif ($contact->contact->name != auth()->user()->name) {
+                                                    echo  "<span>{$contact->contact->name}</span>";
+                                                }
+
+                                            @endphp
+
+                                            <form action="{{ route('delete.contact') }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="contact_id" value="{{ $contact->id }}">
+                                                <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                            </form>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="modal fade" id="requestsModal" tabindex="-1" aria-labelledby="requestsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="requestsModalLabel">Ваши запросы</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group">
+                                @foreach($contacts as $contact)
+                                    @if($contact->status == 'pending' && $contact->user_id == auth()->user()->id)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>{{ $contact->contact->email }}</span>
+                                            <form action="{{ route('delete.contact') }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="hidden" name="contact_id" value="{{ $contact->id }}">
+                                                <button type="submit" class="btn btn-danger btn-sm">Отменить</button>
+                                            </form>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
 
 
         <div class="row">
@@ -95,10 +171,11 @@
                                     </form>
 
 
-                                    <form action="{{ route('delete_contact') }}" method="post">
+                                    <form action="{{ route('delete.contact') }}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <input class="btn btn-danger btn-sm" type="submit" name="rejected" value="  Deny ">
+                                        <input type="hidden" name="contact_id" value="{{ $contact->id }}">
+                                        <input class="btn btn-danger btn-sm" type="submit" value="  Deny ">
                                     </form>
 
 
