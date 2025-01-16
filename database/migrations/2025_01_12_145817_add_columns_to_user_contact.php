@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('user_contact', function (Blueprint $table) {
 
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('contact_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id', 'user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('contact_id', 'contact_id')->references('id')->on('users')->onDelete('cascade');
 
 
         });
@@ -28,11 +28,8 @@ return new class extends Migration
     {
         Schema::table('user_contact', function (Blueprint $table) {
 
-            $table->dropForeign('user_id');
-            $table->dropForeign('contact_id');
 
-            $table->dropIndex('user_id');
-            $table->dropIndex('contact_id');
+
 
 
 
