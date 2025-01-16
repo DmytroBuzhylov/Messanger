@@ -4,11 +4,13 @@ use App\Http\Middleware\MainMiddleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::middleware([MainMiddleware::class])->group(function () {
+
+    Route::get('/', function () {
+        return redirect()->route('main');
+    });
 
    Route::get('/main', 'App\Http\Controllers\Main\IndexController')->name('main');
    Route::get('/main/{friendId}', 'App\Http\Controllers\Main\MessageController')->name('messages');
