@@ -29,7 +29,7 @@
 ## 🔧 Установка проекта
 1. Клонируйте репозиторий:
     ```bash
-    git clone https://github.com/your-username/laravel-messenger.git
+    git clone https://github.com/DmytroBuzhylov/Messanger
     cd laravel-messenger
     ```
 2. Установите зависимости:
